@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+# UART HCI init script
+#
+# Copyright (C) 2014 Johan Hovold <johan@hovoldconsulting.com>
+
+DAEMON=/usr/sbin/hciattach
+NAME=hciattach
+DESC="UART HCI interface"
+LOG=/var/log/hciattach
+CONFIG=/etc/default/hciattach
+
+if [ ! -f $CONFIG ]; then
+	echo "$0: failed to open $CONFIG"
+	exit 1
+fi
+
+. $CONFIG
+
+bt_enable() {
+	echo $1 >/sys/class/gpio/gpio${HCIATTACH_GPIO}/value
+}
+
+start() {
+	start-stop-daemon --stop --quiet -t --exec $DAEMON && return
+
+	bt_enable 1
+	pid=`start-stop-daemon --start --quiet --exec $DAEMON -- \
+		-p $HCIATTACH_ARGS 2>$LOG | tail -1`
+	if [ -z "$pid" ]; then
+		echo "failed"
+		bt_enable 0
+		exit 1
+	fi
+}
+
+stop() {
+	start-stop-daemon --stop --quiet --exec $DAEMON
+	# Killing hciattach can take a while if interface is still up
+	while start-stop-daemon -t --stop --quiet --exec $DAEMON; do
+		sleep 1
+	done
+	bt_enable 0
+}
+
+case "$1" in
+        start)
+                echo -n "Starting $DESC: "
+                start
+                echo "$NAME"
+                ;;
+        stop)
+                echo -n "Stopping $DESC: "
+                stop
+                echo "$NAME"
+                ;;
+        restart)
+                echo -n "Restarting $DESC: "
+                stop
+                start
+                echo "$NAME"
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                exit 1
+esac
+
+exit $?

@@ -1,0 +1,2 @@
+HCIATTACH_GPIO=83
+HCIATTACH_ARGS="/dev/ttyO5 texas"

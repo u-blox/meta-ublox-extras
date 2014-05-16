@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Bluetooth daemon init script
+#
+# Copyright (C) 2014 Johan Hovold <johan@hovoldconsulting.com>
+
+DAEMON=/usr/sbin/bluetoothd
+NAME=bluetoothd
+DESC="Bluetooth daemon"
+
+start() {
+	start-stop-daemon --start --quiet --exec $DAEMON
+}
+
+stop() {
+	start-stop-daemon --stop --quiet --exec $DAEMON
+}
+
+case "$1" in
+	start)
+		echo -n "Starting $DESC: "
+		start
+		echo "$NAME"
+		;;
+	stop)
+		echo -n "Stopping $DESC: "
+		stop
+		echo "$NAME"
+		;;
+	restart)
+		echo -n "Restarting $DESC: "
+		stop
+		start
+		echo "$NAME"
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
+
+exit $?
