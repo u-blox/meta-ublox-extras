@@ -1,0 +1,22 @@
+meta-ublox-extras
+=================
+OpenEmbedded/Yocto extras layer for u-blox platforms
+
+Dependencies
+------------
+This layer depends on:
+
+meta-ublox
+
+URI: git://git.yoctoproject.org/poky.git
+subdirectory: meta
+
+URI: git://git.openembedded.org/meta-openembedded
+subdirectory: meta-oe
+subdirectory: meta-webserver
+
+License
+-------
+All metadata is MIT licensed unless otherwise stated. Source code
+included in tree for individual recipes is under the LICENSE stated in
+the associated recipe (.bb file) unless otherwise stated.
