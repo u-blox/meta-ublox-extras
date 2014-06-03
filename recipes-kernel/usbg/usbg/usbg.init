@@ -1,0 +1,199 @@
+#!/bin/sh
+#
+# USB Gadget init script
+#
+# Copyright (C) 2014 Johan Hovold <johan@hovoldconsulting.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+DESC="USB Gadget"
+CONFIG="/etc/default/usbg"
+
+# These should be overridden in /etc/default/usbg
+#
+idVendor="0x0000"
+idProduct="0x0000"
+
+LANGID="0x0409"
+
+f_acm()
+{
+	local f=$device/functions/acm.0
+
+	mkdir -p $f
+
+	for c in $@; do
+		ln -s $f $c
+	done
+}
+
+f_mass_storage()
+{
+	local f=$device/functions/mass_storage.0
+
+	if [ -z "$mass_storage_file" ]; then
+		return;
+	fi
+
+	if [ ! -r "$mass_storage_file" ]; then
+		echo "$0: failed to open storage $mass_storage_file" 2>&1
+		return
+	fi
+
+	mkdir -p $f
+
+	echo 1 >$f/stall
+
+	echo 0 >$f/lun.0/ro		# NOTE: must be set before file
+	echo 1 >$f/lun.0/removable
+	echo $mass_storage_file >$f/lun.0/file
+
+	for c in $@; do
+		ln -s $f $c
+	done
+}
+
+f_ncm()
+{
+	local f=$device/functions/ncm.0
+
+	mkdir -p $f
+
+	for c in $@; do
+		ln -s $f $c
+	done
+}
+
+f_setup()
+{
+	f_ncm $@
+	f_mass_storage $@
+}
+
+if [ ! -f $CONFIG ]; then
+        echo "$0: failed to open $CONFIG" 2>&1
+        exit 1
+fi
+
+. $CONFIG
+
+if [ -z "$CONFIGFS" ]; then
+	CONFIGFS=/sys/kernel/config
+fi
+
+UDC=`ls /sys/class/udc 2>/dev/null | tail -1`
+if [ -z $UDC ]; then
+	echo "$0: USB device controller not found" 2>&1
+	exit 1
+fi
+
+# Make sure configfs is mounted and libcomposite loaded
+if [ ! -d $CONFIGFS/usb_gadget ]; then
+	modprobe libcomposite
+
+	if [ ! -d $CONFIGFS/usb_gadget ]; then
+		echo "$0: failed to open configfs" 2>&1
+		exit 1
+	fi
+fi
+
+# Default configuration is CDC NCM or CDC NCM and Mass storage depending on
+# whether a backing storage file is available.
+if [ -z "$configuration" ]; then
+	configuration="CDC Ethernet (NCM)"
+	if [ -r "$mass_storage_file" ]; then
+		configuration="$configuration and Mass storage"
+	fi
+fi
+
+device=$CONFIGFS/usb_gadget/g1
+config=$device/configs/c.1
+strings=strings/$LANGID
+
+start()
+{
+	if [ -d $device ]; then
+		return 0
+	fi
+
+	# Device setup
+	mkdir -p $device
+
+	echo $idVendor >$device/idVendor
+	echo $idProduct >$device/idProduct
+
+	mkdir -p $device/$strings
+	echo $serialnumber >$device/$strings/serialnumber
+	echo $manufacturer >$device/$strings/manufacturer
+	echo $product >$device/$strings/product
+
+	# Configuration setup
+	mkdir -p $config
+	if [ ! -z "$bmAttributes" ]; then
+		echo $bmAttributes >$config/bmAttributes
+	fi
+	if [ ! -z "$MaxPower" ]; then
+		echo $MaxPower >$config/MaxPower
+	fi
+	mkdir -p $config/$strings
+	echo $configuration >$config/$strings/configuration
+
+	# Function setup
+	#
+	# NOTE: Setup can be overridden completely or partly by redefining
+	#       f_setup or the individual function setups in the config file.
+	f_setup $config
+
+	echo $UDC >$device/UDC
+}
+
+stop()
+{
+	if [ ! -d $device ]; then
+		return 0
+	fi
+
+	echo "" >$device/UDC
+
+	rm -f $config/*.*
+	rmdir $config/$strings
+	rmdir $config
+
+	rmdir $device/functions/*.*
+
+	rmdir $device/$strings
+
+	rmdir $device
+}
+
+case "$1" in
+        start)
+                echo "Starting $DESC"
+                start
+                ;;
+        stop)
+                echo "Stopping $DESC"
+                stop
+                ;;
+        restart)
+                echo "Restarting $DESC"
+                stop
+                start
+                ;;
+        *)
+                echo "Usage: $0 {start|stop|restart}"
+                exit 1
+esac
+
+exit $?

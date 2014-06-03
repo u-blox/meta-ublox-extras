@@ -1,0 +1,24 @@
+# USB Gadget configuration
+#
+idVendor="0x1546"
+idProduct="0x2001"
+
+manufacturer="u-blox AG"
+product="ELIN-W160-EVK"
+serialnumber="0"
+
+bmAttributes="0xc0"	# Self-powered
+MaxPower="2"		# 2mA
+
+# Enable Mass storage using the first mmc partition as backing storage
+#
+#mass_storage_file="/dev/mmcblk0p1"
+
+# Override default configuration with CDC NCM and CDC ACM only
+#
+#configuration="CDC Ethernet (NCM) and CDC ACM"
+#f_setup()
+#{
+#	f_ncm $@
+#	f_acm $@
+#}

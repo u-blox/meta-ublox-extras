@@ -1,0 +1,8 @@
+# USB Gadget configuration
+#
+idVendor="0x1546"
+idProduct="0x2001"
+
+manufacturer="u-blox AG"
+product="ELIN-W160"
+serialnumber="0"
