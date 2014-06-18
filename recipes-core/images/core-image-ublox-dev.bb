@@ -7,6 +7,7 @@ IMAGE_FEATURES += "debug-tweaks"
 
 BASE_INSTALL = " \
     busybox-udhcpd \
+    hiawatha \
     i2c-tools \
     mtd-utils \
     mtd-utils-ubifs \
