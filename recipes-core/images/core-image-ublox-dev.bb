@@ -20,6 +20,7 @@ EXTRA_INSTALL = " \
     lrzsz \
     minicom \
     nano \
+    packagegroup-ublox-benchmark \
     rsync \
     "
 
