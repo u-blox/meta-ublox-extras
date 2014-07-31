@@ -11,6 +11,7 @@ BASE_INSTALL = " \
     i2c-tools \
     mtd-utils \
     mtd-utils-ubifs \
+    u-boot-fw-utils-ublox \
     "
 
 EXTRA_INSTALL = " \
