@@ -75,6 +75,17 @@ f_ncm()
 	done
 }
 
+f_rndis()
+{
+	local f=$device/functions/rndis.0
+
+	mkdir -p $f
+
+	for c in $@; do
+		ln -s $f $c
+	done
+}
+
 f_setup()
 {
 	f_ncm $@
