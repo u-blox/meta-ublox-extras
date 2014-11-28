@@ -1,0 +1,4 @@
+Common targets are:
+    core-image-minimal
+    core-image-ublox-dev
+    meta-toolchain
