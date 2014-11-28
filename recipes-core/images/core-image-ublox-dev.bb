@@ -6,6 +6,7 @@ IMAGE_FEATURES += "tools-debug"
 IMAGE_FEATURES += "debug-tweaks"
 
 BASE_INSTALL = " \
+    busybox-ifplugd \
     busybox-udhcpd \
     hiawatha \
     i2c-tools \
