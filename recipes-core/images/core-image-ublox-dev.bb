@@ -23,6 +23,9 @@ EXTRA_INSTALL = " \
     nano \
     packagegroup-ublox-benchmark \
     rsync \
+    iperf \
+    ti-utils \
+    ethtool \
     "
 
 # Add package groups core-boot and base explicitly rather than through
