@@ -23,6 +23,7 @@ EXTRA_INSTALL = " \
     nano \
     packagegroup-ublox-benchmark \
     rsync \
+    bridge-utils \
     iperf \
     ti-utils \
     ethtool \
