@@ -21,6 +21,8 @@ do_install_append() {
     install -d ${D}${sysconfdir}/hiawatha
     install -m 644 ${WORKDIR}/hiawatha.conf ${D}${sysconfdir}/hiawatha
 
+    rm ${D}/var/www/hiawatha/index.html
+
     # We run server as www-data (rather than OE default nobody)
     sed -i 's/nobody/www-data/g' ${D}${sysconfdir}/hiawatha/php-fcgi.conf
 }

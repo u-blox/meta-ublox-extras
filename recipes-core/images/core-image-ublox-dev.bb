@@ -13,6 +13,7 @@ BASE_INSTALL = " \
     mtd-utils \
     mtd-utils-ubifs \
     u-boot-fw-utils-ublox \
+    elin-w1-webdocumentation \
     "
 
 EXTRA_INSTALL = " \
