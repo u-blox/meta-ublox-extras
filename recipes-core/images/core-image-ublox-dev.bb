@@ -29,6 +29,7 @@ EXTRA_INSTALL = " \
     iperf \
     ti-utils \
     ethtool \
+    hostap-daemon \
     bluez-hcidump \
     "
 
