@@ -29,6 +29,7 @@ EXTRA_INSTALL = " \
     iperf \
     ti-utils \
     ethtool \
+    bluez-hcidump \
     "
 
 # Add package groups core-boot and base explicitly rather than through
