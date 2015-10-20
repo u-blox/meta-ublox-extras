@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Johan Hovold <johan@hovoldconsulting.com>
 
-DAEMON=/usr/sbin/hciattach
+DAEMON=/usr/bin/hciattach
 NAME=hciattach
 DESC="UART HCI interface"
 LOG=/var/log/hciattach

@@ -31,6 +31,9 @@ EXTRA_INSTALL = " \
     ethtool \
     hostapd \
     bluez-hcidump \
+    bluez5-noinst-tools \
+    bluez5-obex \
+    bluez5-testtools \
     "
 
 # Add package groups core-boot and base explicitly rather than through
