@@ -34,6 +34,10 @@ EXTRA_INSTALL = " \
     bluez5-noinst-tools \
     bluez5-obex \
     bluez5-testtools \
+    socat \
+    ppp \
+    procps \
+    tcpdump \
     "
 
 # Add package groups core-boot and base explicitly rather than through
