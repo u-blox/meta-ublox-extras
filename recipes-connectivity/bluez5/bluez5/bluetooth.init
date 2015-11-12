@@ -10,6 +10,8 @@ DESC="Bluetooth daemon"
 
 start() {
 	start-stop-daemon --start --quiet --background --exec dbus-launch -- $DAEMON
+	sleep 1
+	hciconfig hci0 up piscan> /dev/null 2>&1
 }
 
 stop() {
