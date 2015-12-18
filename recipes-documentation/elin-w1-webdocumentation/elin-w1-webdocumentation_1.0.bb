@@ -6,8 +6,8 @@ SECTION = "docs/misc"
 
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=2a6a0650f0e4693d25fd0d5667ed1569"
 
-SRCREV = "c66732e94133f88e05ce03198d03e8725991c44a"
-SRC_URI = "git://${UBLOX_GIT}/elin-w1-web-documentation.git;protocol=${UBLOX_GIT_PROTOCOL}"
+SRCREV = "f332916a2fb12faa24f6093abeabf029f8431abf"
+SRC_URI = "git://${UBLOX_GIT}/elin-w1-web-documentation.git;protocol=${UBLOX_GIT_PROTOCOL};branch=fido"
 
 PR = "r1+gitr${SRCPV}"
 
